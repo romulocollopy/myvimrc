@@ -3,7 +3,7 @@
 $PWD = `pwd`
 
 #Link .vimrc to reps file
-ln -s `pwd`vimrc ~/.vimrc
+ln -s `pwd`/vimrc ~/.vimrc
 
 # Install Vundle
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
