@@ -31,6 +31,7 @@ Plugin 'jmcantrell/vim-virtualenv'
 Plugin 'othree/html5.vim'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'lepture/vim-jinja'
+Plugin 'mattn/emmet-vim'
 
 "C supoort
 Plugin 'vim-scripts/c.vim'
@@ -48,18 +49,6 @@ Plugin 'vim-scripts/c.vim'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line  
-
 set encoding=utf-8
 let mapleader = "\<Space>" 
 
@@ -71,8 +60,19 @@ let g:airline#extensions#virtualenv#enabled = 1
 
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
+let g:airline_powerline_fonts = 1
+
+" Syntastic options
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 
 " Ctlp bindings
 let g:ctrlp_map = '<c-p>'

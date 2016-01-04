@@ -20,3 +20,12 @@ cmake -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
 cmake --build . --target ycm_support_libs
 cd $PWD
 rm -rf ~/ycm_build
+
+#Install Airline fonts
+git clone https://github.com/powerline/fonts ~/vim_airline_fonts
+cd ~/vim_airline_fonts
+./install.sh
+cd PWD
+rm -r ~/vim_airline_fonts
+
+
