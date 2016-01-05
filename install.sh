@@ -22,10 +22,9 @@ cd $PWD
 rm -rf ~/ycm_build
 
 #Install Airline fonts
-git clone https://github.com/powerline/fonts ~/vim_airline_fonts
+git clone https://github.com/powerline/fonts.git ~/vim_airline_fonts
 cd ~/vim_airline_fonts
 ./install.sh
-cd PWD
-rm -r ~/vim_airline_fonts
-
+cd $PWD
+rm -rf ~/vim_airline_fonts
 
