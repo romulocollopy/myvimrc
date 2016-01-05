@@ -18,14 +18,14 @@ sudo pacman -S cmake --noconfirm
 mkdir ~/ycm_build; cd ~/ycm_build
 cmake -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
 cmake --build . --target ycm_support_libs
-cd $PWD
+cd ~
 rm -rf ~/ycm_build
 
 #Install Airline fonts
 git clone https://github.com/powerline/fonts.git ~/vim_airline_fonts
 cd ~/vim_airline_fonts
 ./install.sh
-cd $PWD
+cd ~
 rm -rf ~/vim_airline_fonts
 
 #Install falke8 systax checker
