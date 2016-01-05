@@ -28,3 +28,5 @@ cd ~/vim_airline_fonts
 cd $PWD
 rm -rf ~/vim_airline_fonts
 
+#Install falke8 systax checker
+sudo pacman -S flake8 --noconfirm
