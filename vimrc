@@ -11,6 +11,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " plugin on GitHub repo
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'mmai/vim-zenmode'
 
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
@@ -99,14 +100,18 @@ map <leader>q  :bp<CR>
 map <leader>w  :bn<CR>
 map <leader>c  :bdelete<CR>
 
+"Zenmode
+let g:zenmode_background = "dark"
+let g:zenmode_colorscheme = "solarized"
+let g:zenmode_font ="Cousine 12"
 
 " -- solarized personal conf
 let g:solarized_termcolors=256
- 
+
 try
     colorscheme solarized
 catch
-endtry 
+endtry
 set background=dark
 
 " YouCompleteMe
@@ -140,3 +145,6 @@ set showmatch
 
 let python_highlight_all = 1
 
+" Directories for swp files
+set nobackup
+set noswapfile
