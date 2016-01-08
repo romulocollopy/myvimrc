@@ -18,6 +18,9 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-commentary'
 Plugin 'ntpeters/vim-better-whitespace'
 
+Plugin 'sheerun/vim-polyglot'
+Plugin 'airblade/vim-gitgutter'
+
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -51,7 +54,7 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 
 set encoding=utf-8
-let mapleader = "\<Space>" 
+let mapleader = "\<Space>"
 
 " Vim Airline
 let g:airline_theme = 'powerlineish'
@@ -63,6 +66,12 @@ let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
 let g:airline_powerline_fonts = 1
+
+" Fugitive Git
+set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
+if exists("*fugitive#statusline")
+  set statusline+=%{fugitive#statusline()}
+endif
 
 " Syntastic options
 set statusline+=%#warningmsg#
