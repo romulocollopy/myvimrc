@@ -14,12 +14,13 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'mmai/vim-zenmode'
 
 Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
+
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-commentary'
 Plugin 'ntpeters/vim-better-whitespace'
 
 Plugin 'sheerun/vim-polyglot'
-Plugin 'airblade/vim-gitgutter'
 
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
@@ -108,6 +109,7 @@ map <leader>n  :NERDTreeToggle<CR>
 map <leader>q  :bp<CR>
 map <leader>w  :bn<CR>
 map <leader>c  :bdelete<CR>
+set hidden
 
 "Zenmode
 let g:zenmode_background = "dark"
@@ -116,6 +118,10 @@ let g:zenmode_font ="Cousine 12"
 
 " -- solarized personal conf
 let g:solarized_termcolors=256
+
+if $COLORTERM == 'gnome-terminal'
+    set term=gnome-256color
+endif
 
 try
     colorscheme solarized
@@ -150,8 +156,8 @@ set cursorline
 
 " show the matching part of the pair for [] {} and ()
 set showmatch
-" enable all Python syntax highlighting features
 
+" enable all Python syntax highlighting features
 let python_highlight_all = 1
 
 " Directories for swp files
