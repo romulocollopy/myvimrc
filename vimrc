@@ -75,6 +75,8 @@ if exists("*fugitive#statusline")
 endif
 
 set diffopt=filler,context:4,vertical
+
+
 " Syntastic options
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -84,7 +86,8 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-
+let g:ycm_register_as_syntastic_checker = 0
+let g:ycm_seed_identifiers_with_syntax = 1 "Feed YCM identifier with syntax keywords
 
 " Ctlp bindings
 let g:ctrlp_map = '<c-p>'
