@@ -15,11 +15,12 @@ vim +PluginInstall +qall
 sudo pacman -S cmake --noconfirm
 
 # Build youCompleteMe
-mkdir ~/ycm_build; cd ~/ycm_build
-cmake -G "Unix Makefiles" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
-cmake --build . --target ycm_support_libs
-cd ~
-rm -rf ~/ycm_build
+cd ~/.vim/bundle/YouCompleteMe;
+if hash go 2> /dev/null; then
+    python2 install.py --clang-completer --gocode-completer --tern-completer
+else
+    python2 install.py --clang-completer --tern-completer
+fi
 
 #Install Airline fonts
 git clone https://github.com/powerline/fonts.git ~/vim_airline_fonts
