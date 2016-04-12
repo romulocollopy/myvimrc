@@ -1,43 +1,35 @@
 #!/bin/bash
+# /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+# brew update
+brew rm vim python macvim
+brew install python python3 cmake flake npm nodejs
+export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
-if [!hash pip 2> /dev/null]; then
-    sudo pacman -S python2-pip python-pip --noconfirm
-fi
+brew uninstall --force macvim vim
+brew install macvim --override-system-vim --custom-icons --with-cscope --with-lua --enable-pythoninterp --enable-python3interp --ovrride-system-vi --with-python --with-python3
+brew linkapps macvim
+sudo ln -sf /usr/local/bin/mvim vim
 
-if [!hash npm 2> /dev/null]; then
-    sudo pacman -S nodejs npm --noconfirm
-fi
+sudo pip install virtualenv virtualenvwrapper rope flake8
+# echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.profile
 
 $PWD = `pwd`
 
 #Link .vimrc to reps file
 ln -s `pwd`/vimrc ~/.vimrc
+ln -s ~/.vimrc ~/.nvimrc
+ln -s ~/.vim ~/.nvim
 
 # Install Vundle
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 # Install Vundle Plugins
 vim +PluginInstall +qall
-sudo pip2 install rope
-cd ~/.vim/bundle/ropevim/;sudo python2 setup.py install
+python ~/.vim/bundle/ropevim/setup.py install
 
-# Install cmake to compile YouCompleteMe
-if [!hash cmake 2> /dev/null]; then
-    sudo pacman -S cmake --noconfirm
-fi
 # Build youCompleteMe
-cd ~/.vim/bundle/YouCompleteMe;
-if hash go 2> /dev/null; then
-    python2 install.py --clang-completer --gocode-completer --tern-completer
-else
-    python2 install.py --clang-completer --tern-completer
-fi
+python ~/.vim/bundle/YouCompleteMe/install.py --clang-completer --tern-completer
 
 #Install Airline fonts
 git clone https://github.com/powerline/fonts.git ~/vim_airline_fonts
-cd ~/vim_airline_fonts
-./install.sh
-cd ~
+~/vim_airline_fonts/install.sh
 rm -rf ~/vim_airline_fonts
-
-#Install falke8 systax checker
-sudo pacman -S flake8 --noconfirm
