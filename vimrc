@@ -22,6 +22,8 @@ Plugin 'ntpeters/vim-better-whitespace'
 
 Plugin 'sheerun/vim-polyglot'
 
+Plugin 'ternjs/tern_for_vim'
+
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -77,9 +79,6 @@ endif
 
 set diffopt=filler,context:4,vertical
 
-" YouCompleteMe
-let g:ycm_autoclose_preview_window_after_completion=1
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " Syntastic options
 set statusline+=%#warningmsg#
@@ -90,8 +89,13 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+" YouCompleteMe
+let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_register_as_syntastic_checker = 0
 let g:ycm_seed_identifiers_with_syntax = 1 "Feed YCM identifier with syntax keywords
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:ycm_path_to_python_interpreter = '/usr/local/bin/python'
 
 " Ctlp bindings
 let g:ctrlp_map = '<c-p>'
@@ -168,4 +172,8 @@ let python_highlight_all = 1
 set nobackup
 set noswapfile
 
-let g:ycm_path_to_python_interpreter = '/usr/local/bin/python'
+set guifont=Source\ Code\ Pro\ for\ Powerline:h12
+set linespace=2
+
+au FileType python  map <buffer> <leader>b oimport ipdb; ipdb.set_trace()<esc>
+au FileType python  map <buffer> <silent> <leader>B Oimport ipdb; ipdb.set_trace()<esc>
