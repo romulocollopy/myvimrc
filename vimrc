@@ -10,7 +10,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " plugin on GitHub repo
-Plugin 'altercation/vim-colors-solarized'
+Plugin 'sickill/vim-monokai'
 Plugin 'mmai/vim-zenmode'
 
 Plugin 'tpope/vim-fugitive'
@@ -95,12 +95,12 @@ let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_register_as_syntastic_checker = 0
 let g:ycm_seed_identifiers_with_syntax = 1 "Feed YCM identifier with syntax keywords
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
-let g:ycm_path_to_python_interpreter = '/usr/local/bin/python'
 
 " Ctlp bindings
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 
 set wildmode=list:longest,list:full
 set wildignore=*/tmp/*,*.so,*.swp,*.zip,*.o,*.obj,.git,*.rbc,*.pyc,__pycache__
@@ -125,14 +125,14 @@ set hidden
 
 "Zenmode
 let g:zenmode_background = "dark"
-let g:zenmode_colorscheme = "solarized"
+let g:zenmode_colorscheme = "monokai"
 let g:zenmode_font ="Cousine 12"
 
 " -- solarized personal conf
-let g:solarized_termcolors=256
+let g:monokai_termcolors=256
 
 try
-    colorscheme solarized
+    colorscheme monokai
 catch
 endtry
 set background=dark
@@ -177,3 +177,6 @@ set linespace=2
 
 au FileType python  map <buffer> <leader>b oimport ipdb; ipdb.set_trace()<esc>
 au FileType python  map <buffer> <silent> <leader>B Oimport ipdb; ipdb.set_trace()<esc>
+
+" let g:ycm_path_to_python_interpreter = '/usr/local/bin/python'
+let g:ycm_python_binary_path = '/usr/local/bin/python3'
