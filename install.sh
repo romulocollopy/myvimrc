@@ -14,10 +14,11 @@ brew install python python3 cmake flake npm nodejs
 # this makes MacVim aware of brew's Python
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
-brew install macvim --override-system-vim --custom-icons --with-cscope --with-lua --enable-pythoninterp --enable-python3interp --ovrride-system-vi
+brew install macvim --override-system-vim --custom-icons --with-cscope --with-lua --enable-pythoninterp --enable-python3interp --ovrride-system-vi --with-python
 brew linkapps macvim
 
 ln -s /usr/local/Cellar/macvim/7.4-101/bin/mvim /usr/local/bin/mvim
+sudo ln -sf /usr/local/Cellar/macvim/7.4-101/bin/mvim /opt/local/bin/mvim
 
 sudo pip install virtualenv virtualenvwrapper flake8 rope ropemode ropevim
 echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.profile
