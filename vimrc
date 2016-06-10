@@ -11,7 +11,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " plugin on GitHub repo
 Plugin 'sickill/vim-monokai'
-Plugin 'mmai/vim-zenmode'
+Plugin 'tmhedberg/SimpylFold'
 
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
@@ -79,6 +79,12 @@ endif
 
 set diffopt=filler,context:4,vertical
 
+" SimpleFold
+autocmd BufWinEnter *.py setlocal foldexpr=SimpylFold(v:lnum) foldmethod=expr
+autocmd BufWinLeave *.py setlocal foldexpr< foldmethod<
+let g:SimpylFold_docstring_preview = 1
+let g:SimpylFold_fold_docstring = 0
+let g:SimpylFold_fold_import = 0
 
 " Syntastic options
 set statusline+=%#warningmsg#
@@ -167,6 +173,9 @@ set showmatch
 
 " enable all Python syntax highlighting features
 let python_highlight_all = 1
+
+vmap < <gv
+vmap > >gv
 
 " Directories for swp files
 set nobackup
