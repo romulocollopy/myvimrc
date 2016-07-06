@@ -13,6 +13,10 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'mmai/vim-zenmode'
 
+Plugin 'sickill/vim-monokai'
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'ternjs/tern_for_vim'
+
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
 
@@ -78,6 +82,19 @@ endif
 
 set diffopt=filler,context:4,vertical
 
+" SimpleFold
+autocmd BufWinEnter *.py setlocal foldexpr=SimpylFold(v:lnum) foldmethod=expr
+autocmd BufWinLeave *.py setlocal foldexpr< foldmethod<
+let g:SimpylFold_docstring_preview = 1
+let g:SimpylFold_fold_docstring = 0
+let g:SimpylFold_fold_import = 0
+
+" YouCompleteMe
+let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_register_as_syntastic_checker = 0
+let g:ycm_seed_identifiers_with_syntax = 1 "Feed YCM identifier with syntax keywords
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
 
 " Syntastic options
 set statusline+=%#warningmsg#
@@ -88,13 +105,12 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:ycm_register_as_syntastic_checker = 0
-let g:ycm_seed_identifiers_with_syntax = 1 "Feed YCM identifier with syntax keywords
 
 " Ctlp bindings
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 
 set wildmode=list:longest,list:full
 set wildignore=*/tmp/*,*.so,*.swp,*.zip,*.o,*.obj,.git,*.rbc,*.pyc,__pycache__
@@ -119,8 +135,7 @@ set hidden
 
 "Zenmode
 let g:zenmode_background = "dark"
-let g:zenmode_colorscheme = "solarized"
-let g:zenmode_font ="Cousine 12"
+let g:zenmode_colorscheme = "monokai"
 
 " -- solarized personal conf
 let g:solarized_termcolors=256
@@ -130,7 +145,7 @@ if $COLORTERM == 'gnome-terminal'
 endif
 
 try
-    colorscheme solarized
+    colorscheme monokai
 catch
 endtry
 set background=dark
@@ -169,3 +184,11 @@ let python_highlight_all = 1
 " Directories for swp files
 set nobackup
 set noswapfile
+
+vmap < <gv
+vmap > >gv
+" set guifont=Source\ Code\ Pro\ for\ Powerline:h12
+set linespace=2
+
+au FileType python  map <buffer> <leader>b oimport ipdb; ipdb.set_trace()<esc>
+au FileType python  map <buffer> <silent> <leader>B Oimport ipdb; ipdb.set_trace()<esc>
