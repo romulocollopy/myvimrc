@@ -17,8 +17,8 @@ ln -s `pwd`/vimrc ~/.vimrc
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 # Install Vundle Plugins
 vim +PluginInstall +qall
-sudo pip2 install rope
-cd ~/.vim/bundle/ropevim/;sudo python2 setup.py install
+sudo pip install rope
+cd ~/.vim/bundle/ropevim/;sudo python setup.py install
 
 # Install cmake to compile YouCompleteMe
 if [!hash cmake 2> /dev/null]; then
@@ -27,9 +27,9 @@ fi
 # Build youCompleteMe
 cd ~/.vim/bundle/YouCompleteMe;
 if hash go 2> /dev/null; then
-    python2 install.py --clang-completer --gocode-completer --tern-completer
+    python install.py --clang-completer --gocode-completer --tern-completer
 else
-    python2 install.py --clang-completer --tern-completer
+    python install.py --clang-completer --tern-completer
 fi
 
 #Install Airline fonts

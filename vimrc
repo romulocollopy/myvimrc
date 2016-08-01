@@ -89,11 +89,6 @@ let g:SimpylFold_docstring_preview = 1
 let g:SimpylFold_fold_docstring = 0
 let g:SimpylFold_fold_import = 0
 
-" YouCompleteMe
-let g:ycm_autoclose_preview_window_after_completion=1
-let g:ycm_register_as_syntastic_checker = 0
-let g:ycm_seed_identifiers_with_syntax = 1 "Feed YCM identifier with syntax keywords
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 
 " Syntastic options
@@ -152,7 +147,11 @@ set background=dark
 
 " YouCompleteMe
 let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_register_as_syntastic_checker = 0
+let g:ycm_seed_identifiers_with_syntax = 1 "Feed YCM identifier with syntax keywords
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
 
 " enable syntax highlighting
 syntax enable
@@ -192,3 +191,6 @@ set linespace=2
 
 au FileType python  map <buffer> <leader>b oimport ipdb; ipdb.set_trace()<esc>
 au FileType python  map <buffer> <silent> <leader>B Oimport ipdb; ipdb.set_trace()<esc>
+
+
+" let g:ycm_python_binary_path = '/usr/bin/python'
