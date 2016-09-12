@@ -32,6 +32,9 @@ else
     python install.py --clang-completer --tern-completer
 fi
 
+# C configs
+ln -s --force `pwd`/ycm_extra_conf.py ~/.vim/.ycm_extra_conf.py
+
 #Install Airline fonts
 git clone https://github.com/powerline/fonts.git ~/vim_airline_fonts
 cd ~/vim_airline_fonts
