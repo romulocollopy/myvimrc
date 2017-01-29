@@ -8,6 +8,10 @@ if [!hash npm 2> /dev/null]; then
     sudo pacman -S nodejs npm --noconfirm
 fi
 
+if [!hash cmake> /dev/null]; then
+    sudo pacman -S cmake --noconfirm
+fi
+
 $PWD = `pwd`
 
 #Link .vimrc to reps file
@@ -19,6 +23,7 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim +PluginInstall +qall
 sudo pip install rope
 cd ~/.vim/bundle/ropevim/;sudo python setup.py install
+cd ~/.vim/bundle/ropevim/;sudo python2 setup.py install
 
 # Install cmake to compile YouCompleteMe
 if [!hash cmake 2> /dev/null]; then
@@ -34,6 +39,10 @@ fi
 
 # C configs
 ln -s --force `pwd`/ycm_extra_conf.py ~/.vim/.ycm_extra_conf.py
+
+# tern_js dependencies
+cd ~/.vim/bundle/tern_for_vim; npm install
+
 
 #Install Airline fonts
 git clone https://github.com/powerline/fonts.git ~/vim_airline_fonts

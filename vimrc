@@ -1,4 +1,5 @@
 set shell=/bin/bash
+set vb
 
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -12,6 +13,7 @@ Plugin 'VundleVim/Vundle.vim'
 " plugin on GitHub repo
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'mmai/vim-zenmode'
+Plugin 'elmcast/elm-vim'
 
 Plugin 'sickill/vim-monokai'
 Plugin 'tmhedberg/SimpylFold'
@@ -153,6 +155,13 @@ let g:ycm_register_as_syntastic_checker = 0
 let g:ycm_seed_identifiers_with_syntax = 1 "Feed YCM identifier with syntax keywords
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
+" elm-vim
+let g:elm_classic_highlighting = 1
+let g:elm_format_autosave = 1
+let g:elm_setup_keybindings = 0
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:elm_syntastic_show_warnings = 1
 
 " enable syntax highlighting
 syntax enable
@@ -193,5 +202,4 @@ set linespace=2
 au FileType python  map <buffer> <leader>b oimport ipdb; ipdb.set_trace()<esc>
 au FileType python  map <buffer> <silent> <leader>B Oimport ipdb; ipdb.set_trace()<esc>
 
-
-" let g:ycm_python_binary_path = '/usr/bin/python'
+let g:python_binary_path = '/usr/bin/python'
