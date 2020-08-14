@@ -1,9 +1,5 @@
 #!/bin/bash
 
-if [!hash pip 2> /dev/null]; then
-    sudo pacman -S python2-pip python-pip --noconfirm
-fi
-
 if [!hash npm 2> /dev/null]; then
     sudo pacman -S nodejs npm --noconfirm
 fi
@@ -16,14 +12,15 @@ $PWD = `pwd`
 
 #Link .vimrc to reps file
 ln -s `pwd`/vimrc ~/.vimrc
+ln -s `pwd`/myvimrc/nvim/init.vim `pwd`/.config/nvim/init.vim
 
 # Install Vundle
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+git clone https://github.com/VundleVim/Vundle.vim.git `pwd`/.config/nvim/bundle/Vundle.vim
 # Install Vundle Plugins
 vim +PluginInstall +qall
-sudo pip install rope
-cd ~/.vim/bundle/ropevim/;sudo python setup.py install
-cd ~/.vim/bundle/ropevim/;sudo python2 setup.py install
+
+pyenv exec python3 install rope black pynvim
+pyenv exec python2 install rope black pynvim
 
 # Install cmake to compile YouCompleteMe
 if [!hash cmake 2> /dev/null]; then
@@ -41,15 +38,4 @@ fi
 ln -s --force `pwd`/ycm_extra_conf.py ~/.vim/.ycm_extra_conf.py
 
 # tern_js dependencies
-cd ~/.vim/bundle/tern_for_vim; npm install
-
-
-#Install Airline fonts
-git clone https://github.com/powerline/fonts.git ~/vim_airline_fonts
-cd ~/vim_airline_fonts
-./install.sh
-cd ~
-rm -rf ~/vim_airline_fonts
-
-#Install falke8 systax checker
-sudo pacman -S flake8 --noconfirm
+cd ~/.config/nvim/bundle/tern_for_vim; npm install
