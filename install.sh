@@ -19,8 +19,7 @@ git clone https://github.com/VundleVim/Vundle.vim.git `pwd`/.config/nvim/bundle/
 # Install Vundle Plugins
 vim +PluginInstall +qall
 
-pyenv exec python3 install rope black pynvim
-pyenv exec python2 install rope black pynvim
+source ~/.local/share/nvim/black/bin/activate; pip install && python3 -m pip install --upgrade git+https://github.com/psf/black.git
 
 # Install cmake to compile YouCompleteMe
 if [!hash cmake 2> /dev/null]; then

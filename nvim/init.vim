@@ -30,6 +30,7 @@ Plugin 'ervandew/supertab'
 
 " HTML / CSS
 Plugin 'hail2u/vim-css3-syntax'
+Plugin 'cakebaker/scss-syntax.vim'
 Plugin 'mattn/emmet-vim'
 Plugin 'othree/html5.vim'
 
@@ -52,6 +53,7 @@ Plugin 'psf/black'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'vim-scripts/grep.vim'
+Plugin 'tpope/vim-commentary'
 
 " Rust
 Plugin 'rust-lang/rust.vim'
@@ -137,9 +139,14 @@ augroup python
   autocmd FileType python call SetPythonOptions()
 augroup END
 
-augroup python
+augroup javascript
   au!
   autocmd FileType js,javascript,vue call SetJSOptions()
+augroup END
+
+augroup css html
+  au!
+  set shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
 augroup END
 
 augroup cc
@@ -156,6 +163,13 @@ function SetPythonOptions()
   set shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
   let python_highlight_all = 1
   let g:pymode_python = 'python3'
+
+  let g:pymode_options_max_line_length = 119
+  let g:pymode_lint_options_pep8 =
+    \ {'max_line_length': g:pymode_options_max_line_length}
+
+  let g:pymode_lint_options_pyflakes = { 'builtins': '_' }
+
 endfunction
 
 function SetJSOptions()
@@ -205,11 +219,9 @@ let g:python3_host_prog='/Users/romulo.collopy/.pyenv/versions/3.8.2/bin/python'
 
 let g:python_host_prog='/Users/romulo.collopy/.pyenv/versions/2.7.17/bin/python'
 let g:pymode_rope = 1
-" let g:pymode_lint_ignore = ["E501", "W",]
 
-let g:pymode_options_max_line_length = 119
-let g:pymode_lint_options_pep8 =
-  \ {'max_line_length': g:pymode_options_max_line_length}
+vmap < <gv
+vmap > >gv
 
 filetype plugin indent on
 set grepprg=grep\ -nH\ $*
