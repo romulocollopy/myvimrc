@@ -35,6 +35,7 @@ Plugin 'mattn/emmet-vim'
 Plugin 'othree/html5.vim'
 
 " JavaScript
+Plugin 'dense-analysis/ale'
 Plugin 'posva/vim-vue'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'joukevandermaas/vim-ember-hbs'
@@ -139,7 +140,7 @@ augroup python
   autocmd FileType python call SetPythonOptions()
 augroup END
 
-augroup javascript
+augroup javascript vue
   au!
   autocmd FileType js,javascript,vue call SetJSOptions()
 augroup END
@@ -227,5 +228,13 @@ filetype plugin indent on
 set grepprg=grep\ -nH\ $*
 let g:tex_flavor = "latex"
 let g:rustfmt_autosave = 1
+
+let g:ale_fixers = {
+\   'javascript': ['eslint'],
+\   'css': ['eslint'],
+\   'vue': ['eslint'],
+\}
+let g:ale_fix_on_save = 1
+let g:vue_pre_processors = ['scss']
 
 colorscheme gruvbox
