@@ -63,6 +63,8 @@ Plugin 'racer-rust/vim-racer'
 " ColorScheme
 Plugin 'morhetz/gruvbox'
 
+let g:racer_experimental_completer = 1
+
 "" Tabs
 nnoremap <Tab> gt
 nnoremap <S-Tab> gT
@@ -84,7 +86,7 @@ endif
 nnoremap <silent> <leader>f :Rgrep<CR>
 let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
-let Grep_Skip_Dirs = '.git node_modules venv'
+let Grep_Skip_Dirs = '.git node_modules venv .venv'
 
 " After all plugins...
 call vundle#end()
@@ -236,5 +238,26 @@ let g:ale_fixers = {
 \}
 let g:ale_fix_on_save = 1
 let g:vue_pre_processors = ['scss']
+
+# Rust
+let g:ycm_language_server =
+\ [
+\   {
+\     'name': 'rust',
+\     'cmdline': ['rust-analyzer'],
+\     'filetypes': ['rust'],
+\     'project_root_files': ['Cargo.toml']
+\   }
+\ ]
+
+augroup Racer
+    autocmd!
+    autocmd FileType rust nmap <buffer> gd         <Plug>(rust-def)
+    autocmd FileType rust nmap <buffer> gs         <Plug>(rust-def-split)
+    autocmd FileType rust nmap <buffer> gx         <Plug>(rust-def-vertical)
+    autocmd FileType rust nmap <buffer> gt         <Plug>(rust-def-tab)
+    autocmd FileType rust nmap <buffer> <leader>gd <Plug>(rust-doc)
+    autocmd FileType rust nmap <buffer> <leader>gD <Plug>(rust-doc-tab)
+augroup END
 
 colorscheme gruvbox
