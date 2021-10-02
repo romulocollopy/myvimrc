@@ -35,15 +35,18 @@ Plugin 'mattn/emmet-vim'
 Plugin 'othree/html5.vim'
 
 " JavaScript
-Plugin 'dense-analysis/ale'
-Plugin 'posva/vim-vue'
 Plugin 'jelera/vim-javascript-syntax'
+" vue
+Plugin 'posva/vim-vue'
+
+" ember
 Plugin 'joukevandermaas/vim-ember-hbs'
 
 " typescript
 Plugin 'leafgarland/typescript-vim'
 Plugin 'HerringtonDarkholme/yats.vim'
 
+Plugin 'dense-analysis/ale'
 
 " Python
 Plugin 'python-mode/python-mode' ", { 'branch': 'develop', 'for': 'python' }
@@ -55,39 +58,17 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'vim-scripts/grep.vim'
 Plugin 'tpope/vim-commentary'
+Plugin 'cappyzawa/starlark.vim'
 
 " Rust
 Plugin 'rust-lang/rust.vim'
 Plugin 'racer-rust/vim-racer'
 
+Plugin 'vim-ruby/vim-rubyv'
+
 " ColorScheme
 Plugin 'morhetz/gruvbox'
-
-let g:racer_experimental_completer = 1
-
-"" Tabs
-nnoremap <Tab> gt
-nnoremap <S-Tab> gT
-nnoremap <silent> <S-t> :tabnew<CR>
-
-map <C-n> :NERDTreeToggle<CR>
-let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
-let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite,venv,node_modules
-
-" ripgrep
-if executable('rg')
-  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
-  set grepprg=rg\ --vimgrep
-  command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
-endif
-
-" grep.vim
-nnoremap <silent> <leader>f :Rgrep<CR>
-let Grep_Default_Options = '-IR'
-let Grep_Skip_Files = '*.log *.db'
-let Grep_Skip_Dirs = '.git node_modules venv .venv'
-
+"
 " After all plugins...
 call vundle#end()
 filetype plugin indent on
@@ -125,26 +106,24 @@ set laststatus=2
 set updatetime=500
 " Disable mouse click to go to position
 set mouse-=a
-" Don't let autocomplete affect usual typing habits
-set completeopt=menuone,preview,noinsert
+
 " Let vim-gitgutter do its thing on large files
 let g:gitgutter_max_signs=10000
 
-" Fugitive Git
-set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
-if exists("*fugitive#statusline")
-  set statusline+=%{fugitive#statusline()}
-endif
-
-nmap <F8> :TagbarToggle<CR>
 augroup python
   au!
-  autocmd FileType python call SetPythonOptions()
+  autocmd FileType python,Tiltfile call SetPythonOptions()
 augroup END
 
-augroup javascript vue
+augroup rust
   au!
-  autocmd FileType js,javascript,vue call SetJSOptions()
+  autocmd BufNewFile,BufRead *.rs set filetype=rust
+  autocmd FileType rust call SetRustOptions()
+augroup END
+
+augroup javascript
+  au!
+  autocmd FileType js,javascript,vue,typescript,css,scss,json call SetJSOptions()
 augroup END
 
 augroup css html
@@ -156,32 +135,7 @@ augroup cc
   au!
   autocmd FileType c,cpp set colorcolumn=110
 augroup END
-
-
-""""""" Python stuff """""""
-function SetPythonOptions()
-  syntax enable
-  set colorcolumn=119
-  set number showmatch
-  set shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
-  let python_highlight_all = 1
-  let g:pymode_python = 'python3'
-
-  let g:pymode_options_max_line_length = 119
-  let g:pymode_lint_options_pep8 =
-    \ {'max_line_length': g:pymode_options_max_line_length}
-
-  let g:pymode_lint_options_pyflakes = { 'builtins': '_' }
-
-endfunction
-
-function SetJSOptions()
-  syntax enable
-  set number showmatch
-  set shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
-  setlocal equalprg=js-beautify\ -s2\ --stdin
-endfunction
-
+"
 """"""" Keybindings """""""
 " Set up leaders
 let mapleader = "\<Space>"
@@ -218,49 +172,125 @@ nnoremap <leader>P "+P
 vnoremap <leader>p "+p
 vnoremap <leader>P "+P
 
-let g:python3_host_prog='/Users/romulo.collopy/.pyenv/versions/3.8.2/bin/python'
-
-let g:python_host_prog='/Users/romulo.collopy/.pyenv/versions/2.7.17/bin/python'
-let g:pymode_rope = 1
-
 vmap < <gv
 vmap > >gv
 
 filetype plugin indent on
 set grepprg=grep\ -nH\ $*
 let g:tex_flavor = "latex"
-let g:rustfmt_autosave = 1
 
 let g:ale_fixers = {
-\   'javascript': ['eslint'],
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'javascript': ['prettier', 'eslint'],
+\   'typescript': ['prettier', 'eslint'],
 \   'css': ['eslint'],
 \   'vue': ['eslint'],
+\   'ruby': ['rubocop'],
+\   'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lines']
 \}
+
+let g:ale_linters = {
+\  'rust': ['analyzer'],
+\  'vue': ['eslint', 'vls']
+\}
+
+let g:ale_linter_aliases = {'vue': ['vue', 'javascript'], 'js': ['javascript'], 'ts':['typescript']}
+" let g:vue_pre_processors = ['scss']
+
 let g:ale_fix_on_save = 1
-let g:vue_pre_processors = ['scss']
-
-" Rust
-let g:ycm_language_server =
-\ [
-\   {
-\     'name': 'rust',
-\     'cmdline': ['rust-analyzer'],
-\     'filetypes': ['rust'],
-\     'project_root_files': ['Cargo.toml']
-\   }
-\ ]
+" let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_text_changed = 'Always'
 
 
-augroup rust
-    autocmd!
-    " Racer
-    autocmd FileType rust nmap <buffer> gd         <Plug>(rust-def)
-    autocmd FileType rust nmap <buffer> gs         <Plug>(rust-def-split)
-    autocmd FileType rust nmap <buffer> gx         <Plug>(rust-def-vertical)
-    autocmd FileType rust nmap <buffer> gt         <Plug>(rust-def-tab)
-    autocmd FileType rust nmap <buffer> <leader>gd <Plug>(rust-doc)
-    autocmd FileType rust nmap <buffer> <leader>gD <Plug>(rust-doc-tab)
-    set shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
-augroup END
+function SetPythonOptions()
+  syntax enable
+  set colorcolumn=119
+  set number showmatch
+  set shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
+  set completeopt=menuone,noinsert
+
+  let python_highlight_all = 1
+  let g:pymode_python = 'python3'
+  let g:pymode_options_max_line_length = 119
+  let g:pymode_lint_options_pep8 =
+    \ {'max_line_length': g:pymode_options_max_line_length}
+
+  let g:pymode_lint_options_pyflakes = { 'builtins': '_' }
+  let g:python3_host_prog='/Users/romulo.collopy/.pyenv/versions/3.9.1/bin/python'
+  let g:python_host_prog='/Users/romulo.collopy/.pyenv/versions/2.7.17/bin/python'
+  let g:pymode_rope = 1
+
+  nnoremap <leader>l :w<CR> :!isort %<CR> :e<CR> :Black<CR>
+
+endfunction
+
+function SetJSOptions()
+  syntax enable
+  set number showmatch
+  set shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
+  setlocal equalprg=js-beautify\ -s2\ --stdin
+endfunction
+
+function SetRustOptions()
+  " As-you-type autocomplete
+  "
+  let g:racer_experimental_completer = 1
+  set completeopt=menu,menuone,preview,noselect,noinsert
+  set colorcolumn=110
+  let g:ale_completion_enabled = 1
+  let g:rustfmt_autosave = 1
+
+  let g:ycm_language_server =
+  \ [
+  \   {
+  \     'name': 'rust',
+  \     'cmdline': ['rust-analyzer'],
+  \     'filetypes': ['rust'],
+  \     'project_root_files': ['Cargo.toml']
+  \   }
+  \ ]
+
+  nnoremap <C-c>g :ALEGoToDefinition<CR>
+  nnoremap K :ALEHover<CR>
+
+  nmap gd         <Plug>(rust-def)
+  nmap gs         <Plug>(rust-def-split)
+  nmap gx         <Plug>(rust-def-vertical)
+  nmap gt         <Plug>(rust-def-tab)
+  nmap <leader>gd <Plug>(rust-doc)
+  nmap <leader>gD <Plug>(rust-doc-tab)
+  set shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
+endfunction
+
+" Fugitive Git
+set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
+if exists("*fugitive#statusline")
+  set statusline+=%{fugitive#statusline()}
+endif
+
+nmap <F8> :TagbarToggle<CR>
+"
+"" Tabs
+nnoremap <Tab> gt
+nnoremap <S-Tab> gT
+nnoremap <silent> <S-t> :tabnew<CR>
+
+map <C-n> :NERDTreeToggle<CR>
+let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
+let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite,venv,node_modules
+
+" ripgrep
+if executable('rg')
+  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
+  set grepprg=rg\ --vimgrep
+  command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+endif
+
+" grep.vim
+nnoremap <silent> <leader>f :Rgrep<CR>
+let Grep_Default_Options = '-IR'
+let Grep_Skip_Files = '*.log *.db'
+let Grep_Skip_Dirs = '.git node_modules venv .venv'
 
 colorscheme gruvbox
