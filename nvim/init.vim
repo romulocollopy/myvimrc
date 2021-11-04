@@ -3,72 +3,71 @@ set nocompatible
 filetype off
 
 set rtp+=~/.config/nvim/bundle/Vundle.vim
+set rtp+=/usr/local/opt/fzf/bin/fzf
+
 call vundle#begin('~/.config/nvim/bundle')
 
 Plugin 'VundleVim/Vundle.vim'
-
-" Custom plugins...
-" Ctrl-P - Fuzzy file search
-Plugin 'kien/ctrlp.vim'
-" Neomake build tool (mapped below to <c-b>)
 Plugin 'benekastah/neomake'
-" Remove extraneous whitespace when edit mode is exited
-Plugin 'thirtythreeforty/lessspace.vim'
 
+" File navigation
+Plugin 'kien/ctrlp.vim'
+Plugin 'vim-scripts/grep.vim'
 Plugin 'majutsushi/tagbar'
-Plugin 'ycm-core/YouCompleteMe'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'tpope/vim-commentary'
 
 " Status bar mods
 Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 
-Plugin 'martinda/Jenkinsfile-vim-syntax'
-
-" Tab completion
-Plugin 'ervandew/supertab'
-
 " HTML / CSS
-Plugin 'hail2u/vim-css3-syntax'
 Plugin 'cakebaker/scss-syntax.vim'
 Plugin 'mattn/emmet-vim'
 Plugin 'othree/html5.vim'
 
 " JavaScript
-Plugin 'jelera/vim-javascript-syntax'
-" vue
-Plugin 'posva/vim-vue'
-
-" ember
-Plugin 'joukevandermaas/vim-ember-hbs'
+Plugin 'pangloss/vim-javascript'
 
 " typescript
-Plugin 'leafgarland/typescript-vim'
 Plugin 'HerringtonDarkholme/yats.vim'
 
-Plugin 'dense-analysis/ale'
+" ReactJS
+Plugin 'peitalin/vim-jsx-typescript'
+Plugin 'maxmellon/vim-jsx-pretty'
+
+" VueJS
+Plugin 'posva/vim-vue'
+
+" EmberJS
+Plugin 'joukevandermaas/vim-ember-hbs'
 
 " Python
-Plugin 'python-mode/python-mode' ", { 'branch': 'develop', 'for': 'python' }
+Plugin 'python-mode/python-mode', { 'branch': 'develop', 'for': 'python' }
 Plugin 'jmcantrell/vim-virtualenv'
 Plugin 'raimon49/requirements.txt.vim', {'for': 'requirements'}
 Plugin 'psf/black'
-
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'vim-scripts/grep.vim'
-Plugin 'tpope/vim-commentary'
 Plugin 'cappyzawa/starlark.vim'
 
 " Rust
 Plugin 'rust-lang/rust.vim'
 Plugin 'racer-rust/vim-racer'
 
-Plugin 'vim-ruby/vim-rubyv'
+" Flutter
+Plugin 'dart-lang/dart-vim-plugin'
+Plugin 'natebosch/vim-lsc'
+Plugin 'natebosch/vim-lsc-dart'
+
+" Completion
+Plugin  'neoclide/coc.nvim', {'branch': 'release'}
+Plugin 'dense-analysis/ale'
+" Plugin 'ycm-core/YouCompleteMe'
 
 " ColorScheme
 Plugin 'morhetz/gruvbox'
-"
+
 " After all plugins...
 call vundle#end()
 filetype plugin indent on
@@ -87,46 +86,39 @@ let g:indentLine_faster = 1
 "" Fix backspace indent
 set backspace=indent,eol,start
 
-
-""""""" SuperTab configuration """""""
-"let g:SuperTabDefaultCompletionType = "<c-x><c-u>"
-function! Completefunc(findstart, base)
-    return "\<c-x>\<c-p>"
-endfunction
-
-"call SuperTabChain(Completefunc, '<c-n>')
-
-"let g:SuperTabCompletionContexts = ['g:ContextText2']
-
-
 """"""" General coding stuff """""""
 " Always show status bar
 set laststatus=2
 " Let plugins show effects after 500ms, not 4s
 set updatetime=500
-" Disable mouse click to go to position
-set mouse-=a
 
 " Let vim-gitgutter do its thing on large files
 let g:gitgutter_max_signs=10000
 
+augroup FileTypeGroup
+  au!
+  au BufNewFile,BufRead *.jsx set filetype=javascript.jsx
+  au BufNewFile,BufRead *.htm* set filetype=html
+  au BufNewFile,BufRead *.rs set filetype=rust
+augroup END
+
 augroup python
   au!
   autocmd FileType python,Tiltfile call SetPythonOptions()
+  let python_highlight_all = 1
 augroup END
 
 augroup rust
   au!
-  autocmd BufNewFile,BufRead *.rs set filetype=rust
   autocmd FileType rust call SetRustOptions()
 augroup END
 
 augroup javascript
   au!
-  autocmd FileType js,javascript,vue,typescript,css,scss,json call SetJSOptions()
+  autocmd FileType js,javascript,javascript.jsx,vue,typescript,css,scss,json call SetJSOptions()
 augroup END
 
-augroup css html
+augroup html
   au!
   set shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
 augroup END
@@ -142,7 +134,7 @@ let mapleader = "\<Space>"
 let maplocalleader="\\"
 
 
-" Neomake and other build commands (ctrl-b)
+" Neomake and other build commands (etrl-b)
 nnoremap <C-b> :w<cr>:Neomake<cr>
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
@@ -152,11 +144,6 @@ map <leader>q  :bp<CR>
 map <leader>w  :bn<CR>
 map <leader>c  :bdelete<CR>
 set hidden
-
-autocmd BufNewFile,BufRead *.tex,*.bib noremap <buffer> <C-b> :w<cr>:new<bar>r !make<cr>:setlocal buftype=nofile<cr>:setlocal bufhidden=hide<cr>:setlocal noswapfile<cr>
-autocmd BufNewFile,BufRead *.tex,*.bib imap <buffer> <C-b> <Esc><C-b>
-
-set rtp+=/usr/local/opt/fz
 
 set clipboard+=unnamedplus
 
@@ -177,57 +164,72 @@ vmap > >gv
 
 filetype plugin indent on
 set grepprg=grep\ -nH\ $*
-let g:tex_flavor = "latex"
+
+" ALE
+
+let g:ale_completion_enabled = 1
+let g:ale_fix_on_save = 1
+let g:ale_html_tidy_options="-e -language en -indent --indent-spaces 2"
+let g:ale_javascript_xo_options = "--plug=react --prettier"
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_text_changed = 'Always'
 
 let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'javascript': ['prettier', 'eslint'],
-\   'typescript': ['prettier', 'eslint'],
-\   'css': ['eslint'],
-\   'vue': ['eslint'],
-\   'ruby': ['rubocop'],
-\   'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lines']
+\  '*': ['remove_trailing_lines', 'trim_whitespace'],
+\  'css': ['eslint'],
+\  'html': ['tidy'],
+\   'javascript': [
+\       'eslint',
+\       'prettier',
+\       'xo',
+\   ],
+\  'ruby': ['rubocop'],
+\  'rust': ['rustfmt'],
+\  'typescript': ['prettier', 'eslint'],
+\  'vue': ['eslint', 'prettier', 'vue'],
 \}
 
 let g:ale_linters = {
+\  'html': ['tidy'],
 \  'rust': ['analyzer'],
-\  'vue': ['eslint', 'vls']
+\  'vue': ['eslint', 'vls'],
+\  'javascript': ['xo'],
 \}
 
-let g:ale_linter_aliases = {'vue': ['vue', 'javascript'], 'js': ['javascript'], 'ts':['typescript']}
-" let g:vue_pre_processors = ['scss']
+let g:ale_linter_aliases = {
+\  'html': ['tidy'],
+\  'ts':['typescript'],
+\  'vue': ['vue', 'css', 'javascript'],
+\}
 
-let g:ale_fix_on_save = 1
-" let g:ale_lint_on_insert_leave = 1
-let g:ale_lint_on_text_changed = 'Always'
 
+set shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
 
 function SetPythonOptions()
   syntax enable
   set colorcolumn=119
   set number showmatch
-  set shiftwidth=4 tabstop=4 softtabstop=4 expandtab autoindent
+  set shiftwidth=4 tabstop=4 softtabstop=4
   set completeopt=menuone,noinsert
-
-  let python_highlight_all = 1
-  let g:pymode_python = 'python3'
-  let g:pymode_options_max_line_length = 119
-  let g:pymode_lint_options_pep8 =
-    \ {'max_line_length': g:pymode_options_max_line_length}
-
-  let g:pymode_lint_options_pyflakes = { 'builtins': '_' }
-  let g:python3_host_prog='/Users/romulo.collopy/.pyenv/versions/3.9.1/bin/python'
-  let g:python_host_prog='/Users/romulo.collopy/.pyenv/versions/2.7.17/bin/python'
-  let g:pymode_rope = 1
-
   nnoremap <leader>l :w<CR> :!isort %<CR> :e<CR> :Black<CR>
 
+  " pymode options
+  let g:pymode_options_max_line_length = 120
+  let g:pymode_python = 'python3'
+  let g:pymode_rope_regenerate_on_write = 1
+  let g:pymode_lint_options_pyflakes = { 'builtins': '_' }
+  let g:pymode_rope = 1
+  let g:pymode_rope_completion = 1
+  let g:pymode_rope_completion_bind = 0
+  let g:python3_host_prog='/Users/romulo.collopy/.pyenv/versions/3.9.5/bin/python'
+  let g:black_virtualenv='/Users/romulo.collopy/.pyenv/versions/3.9.5'
+  let g:python_host_prog='/Users/romulo.collopy/.pyenv/versions/2.7.17/bin/python'
+  let g:pymode_lint_options_pep8 = {'max_line_length': g:pymode_options_max_line_length}
 endfunction
 
 function SetJSOptions()
   syntax enable
   set number showmatch
-  set shiftwidth=2 tabstop=2 softtabstop=2 expandtab autoindent
   setlocal equalprg=js-beautify\ -s2\ --stdin
 endfunction
 
@@ -237,7 +239,6 @@ function SetRustOptions()
   let g:racer_experimental_completer = 1
   set completeopt=menu,menuone,preview,noselect,noinsert
   set colorcolumn=110
-  let g:ale_completion_enabled = 1
   let g:rustfmt_autosave = 1
 
   let g:ycm_language_server =
@@ -278,7 +279,8 @@ nnoremap <silent> <S-t> :tabnew<CR>
 map <C-n> :NERDTreeToggle<CR>
 let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
 let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite,venv,node_modules
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite,venv,node_modules,.venv,target
 
 " ripgrep
 if executable('rg')
