@@ -65,6 +65,10 @@ Plugin  'neoclide/coc.nvim', {'branch': 'release'}
 Plugin 'dense-analysis/ale'
 " Plugin 'ycm-core/YouCompleteMe'
 
+
+" Tab completion
+Plugin 'ervandew/supertab'
+
 " ColorScheme
 Plugin 'morhetz/gruvbox'
 
@@ -102,16 +106,19 @@ let g:indentLine_faster = 1
 " vim-gitgutter do its thing on large files
 let g:gitgutter_max_signs=10000
 
+let g:lsc_dart_sdk_path='/Users/romulo.collopy/.asdf/installs/flutter/2.5.3-stable/'
+
 " ALE
 let g:ale_completion_enabled = 1
 let g:ale_fix_on_save = 1
-let g:ale_html_tidy_options="-e -language en -indent --indent-spaces 2"
+let g:ale_html_tidy_options='-q -language en -mi'
+let g:ale_html_tidy_use_global=1
+let g:ale_html_tidy_executable='/usr/local/bin/tidy'
 let g:ale_lint_on_text_changed = 'Always'
 
 let g:ale_fixers = {
 \  '*': ['remove_trailing_lines', 'trim_whitespace'],
 \  'css': ['eslint'],
-\  'html': ['tidy'],
 \  'javascript': [
 \     'eslint',
 \     'prettier',
@@ -121,15 +128,18 @@ let g:ale_fixers = {
 \  'ruby': ['rubocop'],
 \  'rust': ['rustfmt'],
 \  'vue': ['eslint', 'prettier', 'vue'],
+\  'html': ['tidy'],
+\  'dart': ['dart-format'],
 \}
 
 let g:ale_linters = {
-\  'html': ['tidy'],
 \  'javascript': ['xo'],
+\  'json': ['xo'],
 \  'jsx': ['xo', 'css'],
 \  'rust': ['analyzer'],
 \  'typescript': ['xo'],
 \  'vue': ['vue', 'xo', 'vls', 'css'],
+\  'dart': ['language-server'],
 \}
 
 """"""" Keybindings """""""
@@ -147,6 +157,13 @@ nnoremap <silent> <leader>f :Rgrep<CR>
 nnoremap <Tab> gt
 nnoremap <S-Tab> gT
 nnoremap <silent> <S-t> :tabnew<CR>
+
+""""""" SuperTab configuration """""""
+"let g:SuperTabDefaultCompletionType = "<c-x><c-u>"
+function! Completefunc(findstart, base)
+    return "\<c-x>\<c-p>"
+endfunction
+
 
 " Neomake and other build commands (etrl-b)
 nnoremap <C-b> :w<cr>:Neomake<cr>
